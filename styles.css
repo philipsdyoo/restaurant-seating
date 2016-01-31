@@ -2,6 +2,7 @@ body {
 	background-color: #777;
 	margin: 0;
 	padding: 20px;
+	font-family: monospace;
 }
 .table {
 	width: 18%;
@@ -9,6 +10,7 @@ body {
 	background-color: #ccc;
 	float: left;
 	margin: 0px 1% 5% 0px;
+	text-align: center;
 }
 #queue {
 	width: 94%;
@@ -20,9 +22,9 @@ body {
 	margin-top: 10px;
 }
 .customer {
-	width: 4%;
-	height: 100%;
+	width: 10%;
+	height: 150px;
 	float: left;
 	text-align: center;
-	margin-right: 1%;
+	outline: 1px solid black;
 }

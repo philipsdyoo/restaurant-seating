@@ -4,6 +4,7 @@
 		<meta charset="UTF-8">
 		<title>Seating Algorithm</title>
 		<link rel="stylesheet" type="text/css" href="styles.css">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 	</head>
 
 	<body>
@@ -11,13 +12,15 @@
 		10 tables in two rows of 5 tables
 		1 table can seat 1 or 2 people each
 		to seat a group of >2, they must be seated in consecutive tables
-		At every unit of time, there is a 25% chance a group of customers will arrive
+		At every unit of time, there is a 1/6 chance a group of customers will arrive
 		In that group of customers, it is 20% one, 40% two, 20% three, 10% four, 5% five, 5% six
 		1 2 3 4 | 5 6 7 8 9 10 11 12 | 13 14 15 16 | 17 18 | 19 | 20
 		They will form a queue and they will accumulate waiting time. The goal is to minize waiting time
-		1 person takes 3 time units to eat, 2 people 5 units, 3 people 6 units, 4 people 8 units, 5 people 9 units, 6 people 10 units
+		10 time units to eat for each person in group
 		-->
 		<h1>Restaurant Algo</h1>
+		<h2>Currently using First Best Fit Algorithm</h2>
+		<p>Will add the first group in the queue if they can fit.</p>
 		<h3>Time: <span id="time">0</span></h3>
 		<h3>Wait: <span id="wait">0</span></h3>
 		<div id="table1" class="table"></div>
@@ -33,6 +36,7 @@
 
 		<div id="queue"></div>
 		<button id="next">Next</button>
+		<p>You can also press and hold down 'k' to elapse time.</p>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 		<script type="text/javascript" src="main.js"></script>
 	</body>

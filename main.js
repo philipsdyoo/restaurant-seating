@@ -1,6 +1,7 @@
 $(document).ready(function() {
 	var time = 0;
 	var wait = 0;
+	var tablenumbers = 10;
 	var tables = {
 		table1: null,
 		table2: null,
@@ -19,18 +20,26 @@ $(document).ready(function() {
 		timePass();
 	});
 	$(document).keydown(function(event) {
-		if (event.keyCode == 32) {
+		if (event.keyCode == 13) {
 			timePass();
 		}
 	});
 	function timePass() {
+		//Time variables updated
 		time++;
-		$("#time").text(time);
 		for (var i = 0; i < queue.length; i++) {
 			queue[i].wait++;
-			//console.log(queue);
 		}
-		var arrivalChance = Math.floor((Math.random() * 4) + 1);
+		for (var i = 0; i < tablenumbers; i++) {
+			var table = tables["table"+i];
+			if (table) {
+				table.countdown--;	
+			}
+		}
+		FirstBestFit();
+
+		//Customer arrival and add to Queue
+		var arrivalChance = Math.floor((Math.random() * 6) + 1);
 		if (arrivalChance == 1) {
 			var customer = {
 				number: 1,
@@ -69,8 +78,83 @@ $(document).ready(function() {
 				customer["color"] = "purple";
 			}
 			queue.push(customer);
-			$("#queue").append("<div class='customer' style='background-color:" + customer["color"] + "'>Size: " + customer["number"] + "</div>");
 			//console.log(queue);
+
+			$("#queue").css("height", (Math.floor(queue.length / 11) + 1) * 150 + "px");
 		}
-	}	
+
+		//Update Queue Information
+		$(".customer").remove();
+		for (var i = 0; i < queue.length; i++) {
+			$("#queue").append("<div class='customer' style='background-color:" + queue[i].color + "'>Size: " + queue[i].number + "<br/><br/>" + queue[i].wait + "</div>");
+		}
+
+		//Update Table Information
+		for (var i = 1; i <= tablenumbers; i++) {
+			var table = tables["table"+i];
+			if (table) {
+				$("#table"+i).css("background-color", table.color).html("Size: " + table.number + "<br/><br/>" + table.countdown);
+				if (table.countdown <= 0) {
+					tables["table"+i] = null;
+				}
+			}
+			else {
+				$("#table"+i).css("background-color", "#ccc").html("");
+			}
+		}
+
+		//Update Time Information
+		$("#time").text(time);
+		$("#wait").text(wait);
+	}
+	function FIFO() {
+
+	}
+	function LargestFirst() {
+
+	}
+	function FirstBestFit() {
+		if (queue.length > 0) {
+			var entered = new Array();
+			for (var i = 0; i < queue.length; i++) {
+				var available = TableAvailable(queue[i].number);
+				if (available) {
+					for (var j = 0; j < available.length; j++) {
+						tables[available[j]] = {
+							number: queue[i].number,
+							countdown: queue[i].number * 10,
+							color: queue[i].color
+						};
+					}
+					entered.push(i);
+					wait += queue[i].wait - 1;
+				}
+			}
+			for (var i = 0; i < entered.length; i++) {
+				queue.splice(entered[i], 1);
+			}
+		}
+		//console.log(tables);
+	}
+	function TableAvailable(size) {
+		var consecutive = 0;
+		var available = new Array();
+		for (var i = 1; i < tablenumbers; i+=5) {
+			for (var j = i; j < (i+5); j++) {
+				if (tables["table"+j] == null) {
+					consecutive++;
+					available.push("table"+j);
+				}
+				else {
+					consecutive = 0;
+				}
+				if (consecutive == Math.floor((size+1)/2)) {
+					return available;
+				}
+			}
+			consecutive = 0;
+			available = new Array();
+		}
+		return false;
+	}
 });
