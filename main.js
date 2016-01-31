@@ -39,7 +39,7 @@ $(document).ready(function() {
 		FirstBestFit();
 
 		//Customer arrival and add to Queue
-		var arrivalChance = Math.floor((Math.random() * 6) + 1);
+		var arrivalChance = Math.floor((Math.random() * 5) + 1);
 		if (arrivalChance == 1) {
 			var customer = {
 				number: 1,
@@ -78,9 +78,8 @@ $(document).ready(function() {
 				customer["color"] = "purple";
 			}
 			queue.push(customer);
-			//console.log(queue);
 
-			$("#queue").css("height", (Math.floor(queue.length / 11) + 1) * 150 + "px");
+			$("#queue").css("height", (Math.floor((queue.length-1) / 10) + 1) * 50 + "px");
 		}
 
 		//Update Queue Information
@@ -134,7 +133,6 @@ $(document).ready(function() {
 				queue.splice(entered[i], 1);
 			}
 		}
-		//console.log(tables);
 	}
 	function TableAvailable(size) {
 		var consecutive = 0;
