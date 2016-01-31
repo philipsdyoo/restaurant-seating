@@ -1,0 +1,28 @@
+body {
+	background-color: #777;
+	margin: 0;
+	padding: 20px;
+}
+.table {
+	width: 18%;
+	height: 100px;
+	background-color: #ccc;
+	float: left;
+	margin: 0px 1% 5% 0px;
+}
+#queue {
+	width: 94%;
+	height: 150px;
+	background-color: #999;
+	clear: both;
+}
+#next {
+	margin-top: 10px;
+}
+.customer {
+	width: 4%;
+	height: 100%;
+	float: left;
+	text-align: center;
+	margin-right: 1%;
+}
