@@ -9,7 +9,7 @@
 
 	<body>
 		<div id="header"><a href="https://github.com/philipsdyoo/restaurant-seating" target="_blank"><img src="ghpropic.png" id="ghpropic"></a><h3>Restaurant Algo</h3></div>
-		<!-- FIFO, Largest first, First best fit
+		<!-- FIFO, Largest first, smallest first, First best fit
 		10 tables in two rows of 5 tables
 		1 table can seat 1 or 2 people each
 		to seat a group of >2, they must be seated in consecutive tables
@@ -20,8 +20,12 @@
 		10 time units to eat for each person in group
 		-->
 		<div id="container">
-			<h2>Currently using First Best Fit Algorithm</h2>
-			<p>Will add the first group in the queue if they can fit.</p>
+			<h2>Algorithm Type</h2>
+			FIFO<input type="radio" name="type" value="fifo">
+			Largest First<input type="radio" name="type" value="largestfirst">
+			First Fit<input type="radio" name="type" value="firstfit" checked>
+			<p>Algorithm selected: <span id="algodesc">The first group in the queue that can fit into the restaurant will enter next.</span></p>
+			
 			<h3>Time: <span id="time">0</span></h3>
 			<h3>Wait: <span id="wait">0</span></h3>
 			<h4>Tables</h4>

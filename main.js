@@ -2,26 +2,28 @@ $(document).ready(function() {
 	var time = 0;
 	var wait = 0;
 	var tablenumbers = 10;
-	var tables = {
-		table1: null,
-		table2: null,
-		table3: null,
-		table4: null,
-		table5: null,
-		table6: null,
-		table7: null,
-		table8: null,
-		table9: null,
-		table10: null
-	};
+	var tables = {table1: null, table2: null, table3: null, table4: null, table5: null, table6: null, table7: null, table8: null, table9: null, table10: null};
 	var queue = new Array();
+	var type = $("input[name=type]:checked").val();
 	$("#time").text(time);
 	$("#next").click(function () {
 		timePass();
 	});
 	$(document).keydown(function(event) {
-		if (event.keyCode == 13) {
+		if (event.keyCode == 13 && type) {
 			timePass();
+		}
+	});
+	$("input[name=type]:radio").change(function() {
+		type = $("input[name=type]:checked").val();
+		if (type == "fifo") {
+			$("#algodesc").text("AKA First-Come-First-Served. The group that has waited longest will be one to enter the restaurant next.");
+		}
+		else if (type == "largestfirst") {
+			$("#algodesc").text("The restaurant will serve the first largest group in the queue before others.");
+		}
+		else if (type == "firstfit") {
+			$("#algodesc").text("The first group in the queue that can fit into the restaurant will enter next.");	
 		}
 	});
 	function timePass() {
@@ -30,13 +32,22 @@ $(document).ready(function() {
 		for (var i = 0; i < queue.length; i++) {
 			queue[i].wait++;
 		}
-		for (var i = 0; i < tablenumbers; i++) {
+		for (var i = 1; i <= tablenumbers; i++) {
 			var table = tables["table"+i];
 			if (table) {
 				table.countdown--;	
 			}
 		}
-		FirstBestFit();
+		if (type == "fifo") {
+			$("#algodesc").text("First-In-First-Out is also known as First-Come-First-Served. The group that has waited longest will be one to enter the restaurant next.");
+			FIFO();
+		}
+		else if (type == "largestfirst") {
+			LargestFirst();
+		}
+		else if (type == "firstfit") {
+			FirstFit();
+		}
 
 		//Customer arrival and add to Queue
 		var arrivalChance = Math.floor((Math.random() * 5) + 1);
@@ -107,30 +118,66 @@ $(document).ready(function() {
 		$("#wait").text(wait);
 	}
 	function FIFO() {
-
+		if (queue.length > 0) {
+			var available = TableAvailable(queue[0].number);
+			if (available) {
+				for (var i = 0; i < available.length; i++) {
+					tables[available[i]] = {
+						number: queue[0].number,
+						countdown: queue[0].number * 10,
+						color: queue[0].color
+					};
+				}
+				wait += queue[0].wait - 1;
+				queue.splice(0, 1);
+			}
+		}
 	}
 	function LargestFirst() {
-
-	}
-	function FirstBestFit() {
 		if (queue.length > 0) {
-			var entered = new Array();
+			var largestSize = 0;
+			var largestFirst = 0;
 			for (var i = 0; i < queue.length; i++) {
-				var available = TableAvailable(queue[i].number);
-				if (available) {
-					for (var j = 0; j < available.length; j++) {
-						tables[available[j]] = {
-							number: queue[i].number,
-							countdown: queue[i].number * 10,
-							color: queue[i].color
-						};
-					}
-					entered.push(i);
-					wait += queue[i].wait - 1;
+				if (queue[i].number > largestSize) {
+					largestSize = queue[i].number;
+					largestFirst = i;
 				}
 			}
-			for (var i = 0; i < entered.length; i++) {
-				queue.splice(entered[i], 1);
+			var available = TableAvailable(queue[largestFirst].number);
+			if (available) {
+				for (var j = 0; j < available.length; j++) {
+					tables[available[j]] = {
+						number: queue[largestFirst].number,
+						countdown: queue[largestFirst].number * 10,
+						color: queue[largestFirst].color
+					};
+				}
+				wait += queue[largestFirst].wait - 1;
+				queue.splice(largestFirst, 1);
+			}
+		}
+	}
+	function FirstFit() {
+		if (queue.length > 0) {
+			var firstfit = 0;
+			var available = null;
+			for (var i = 0; i < queue.length; i++) {
+				available = TableAvailable(queue[i].number);
+				if (available) {
+					firstfit = i;
+					break;
+				}
+			}
+			if (available) {
+				for (var j = 0; j < available.length; j++) {
+					tables[available[j]] = {
+						number: queue[firstfit].number,
+						countdown: queue[firstfit].number * 10,
+						color: queue[firstfit].color
+					};
+				}
+				wait += queue[firstfit].wait - 1;
+				queue.splice(firstfit, 1);
 			}
 		}
 	}
